@@ -18,8 +18,8 @@ int main() {
                     form { display: inline-block; text-align: left; margin-top: 20px; width: 300px; }
                     input, select, textarea { display: block; width: 100%; margin-bottom: 15px; padding: 8px; }
                     .radio-group { display: flex; flex-direction: column; margin-bottom: 15px; }
-                    .radio-group label { display: flex; align-items: center; margin-bottom: 5px; }
-                    .radio-group input { margin-right: 10px; }
+                    .radio-group label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+                    .radio-group input { margin-left: 10px; }
                     button { padding: 10px 20px; background-color: blue; color: white; border: none; cursor: pointer; }
                     h2 { margin-bottom: 20px; }
                 </style>
@@ -65,16 +65,16 @@ int main() {
 
                     <div class="radio-group">
                         <label>Niveau d'huile :</label>
-                        <label><input type="radio" name="huile" value="Haut"> Haut</label>
-                        <label><input type="radio" name="huile" value="Moyen"> Moyen</label>
-                        <label><input type="radio" name="huile" value="Bas"> Bas</label>
+                        <label>Haut <input type="radio" name="huile" value="Haut"></label>
+                        <label>Moyen <input type="radio" name="huile" value="Moyen"></label>
+                        <label>Bas <input type="radio" name="huile" value="Bas"></label>
                     </div>
                     
                     <div class="radio-group">
                         <label>Niveau lubrifiant :</label>
-                        <label><input type="radio" name="lubrifiant" value="Haut"> Haut</label>
-                        <label><input type="radio" name="lubrifiant" value="Moyen"> Moyen</label>
-                        <label><input type="radio" name="lubrifiant" value="Bas"> Bas</label>
+                        <label>Haut <input type="radio" name="lubrifiant" value="Haut"></label>
+                        <label>Moyen <input type="radio" name="lubrifiant" value="Moyen"></label>
+                        <label>Bas <input type="radio" name="lubrifiant" value="Bas"></label>
                     </div>
                     
                     <label for="temp">Température du bloc froid :</label>
@@ -82,30 +82,16 @@ int main() {
                     
                     <div class="radio-group">
                         <label>Niveau bac de copeaux :</label>
-                        <label><input type="radio" name="bac" value="Haut"> Haut</label>
-                        <label><input type="radio" name="bac" value="Moyen"> Moyen</label>
-                        <label><input type="radio" name="bac" value="Bas"> Bas</label>
+                        <label>Haut <input type="radio" name="bac" value="Haut"></label>
+                        <label>Moyen <input type="radio" name="bac" value="Moyen"></label>
+                        <label>Bas <input type="radio" name="bac" value="Bas"></label>
                     </div>
                     
                     <div class="radio-group">
                         <label>Tiroir haut desserte :</label>
-                        <label><input type="radio" name="tiroir" value="Complet"> Complet</label>
-                        <label><input type="radio" name="tiroir" value="Manquant"> Manquant</label>
-                        <label><input type="radio" name="tiroir" value="Vide"> Vide</label>
-                    </div>
-                    
-                    <div class="radio-group">
-                        <label>Propreté zone usinage :</label>
-                        <label><input type="radio" name="usinage" value="Propre"> Propre</label>
-                        <label><input type="radio" name="usinage" value="Moyen"> Moyen</label>
-                        <label><input type="radio" name="usinage" value="Non nettoyé"> Non nettoyé</label>
-                    </div>
-                    
-                    <div class="radio-group">
-                        <label>Propreté machine :</label>
-                        <label><input type="radio" name="machine_propre" value="Propre"> Propre</label>
-                        <label><input type="radio" name="machine_propre" value="Moyen"> Moyen</label>
-                        <label><input type="radio" name="machine_propre" value="Non nettoyé"> Non nettoyé</label>
+                        <label>Complet <input type="radio" name="tiroir" value="Complet"></label>
+                        <label>Manquant <input type="radio" name="tiroir" value="Manquant"></label>
+                        <label>Vide <input type="radio" name="tiroir" value="Vide"></label>
                     </div>
                     
                     <label for="observation">Observation (optionnel) :</label>
@@ -116,6 +102,17 @@ int main() {
             </body>
             </html>
         )";
+    });
+    
+    // Route to handle form submission (POST request)
+    CROW_ROUTE(app, "/submit").methods("POST"_method)
+    ([](const crow::request& req) {
+        auto json_data = nlohmann::json::parse(req.body, nullptr, false);
+        if (json_data.is_discarded()) {
+            return crow::response(400, "Invalid JSON");
+        }
+        CROW_LOG_INFO << "Nouvelle réponse: " << json_data.dump();
+        return crow::response{json_data.dump()};
     });
 
     app.bindaddr("0.0.0.0").port(5000).multithreaded().run();
