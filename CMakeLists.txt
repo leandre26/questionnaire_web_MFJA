@@ -26,13 +26,6 @@ endif()
 # DEPENDENCIES #################################################################
 include(FetchContent)
 
-# Fetch Crow and JSON dependencies
-FetchContent_Declare(crow
-  GIT_REPOSITORY https://github.com/CrowCpp/crow.git
-  GIT_TAG        master
-  GIT_SHALLOW    TRUE
-)
-
 FetchContent_Declare(json
   GIT_REPOSITORY https://github.com/nlohmann/json.git
   GIT_TAG        v3.11.3
@@ -40,11 +33,15 @@ FetchContent_Declare(json
 )
 
 set(FETCHCONTENT_UPDATES_DISCONNECTED TRUE)
-FetchContent_MakeAvailable(crow json)
+FetchContent_MakeAvailable(json)
 
 # Correct paths for dependencies
 include_directories(${CMAKE_BINARY_DIR}/_deps/json-src/include)
-include_directories(${CMAKE_BINARY_DIR}/_deps/crow-src/include)
+include_directories(${CMAKE_SOURCE_DIR}/include)
+include_directories(${CMAKE_SOURCE_DIR}/include/crow)
+include_directories(${CMAKE_SOURCE_DIR}/include/crow/include)
+include_directories(${CMAKE_SOURCE_DIR}/include/crow/include/crow)
+include_directories(${CMAKE_SOURCE_DIR}/include/crow/include/crow/middlewares)
 
 # BUILD SETTINGS ###############################################################
 if (APPLE)
