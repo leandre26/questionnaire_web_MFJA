@@ -35,13 +35,6 @@ FetchContent_Declare(json
 set(FETCHCONTENT_UPDATES_DISCONNECTED TRUE)
 FetchContent_MakeAvailable(json)
 
-# Correct paths for dependencies
-include_directories(${CMAKE_BINARY_DIR}/_deps/json-src/include)
-include_directories(${CMAKE_SOURCE_DIR}/include)
-include_directories(${CMAKE_SOURCE_DIR}/include/crow)
-include_directories(${CMAKE_SOURCE_DIR}/include/crow/include)
-include_directories(${CMAKE_SOURCE_DIR}/include/crow/include/crow)
-include_directories(${CMAKE_SOURCE_DIR}/include/crow/include/crow/middlewares)
 
 # BUILD SETTINGS ###############################################################
 if (APPLE)
@@ -52,13 +45,19 @@ else()
   set(CMAKE_INSTALL_RPATH "\$ORIGIN/../lib;/usr/local/lib")
 endif()
 
+include_directories(${json_SOURCE_DIR}/include)
+
+include_directories(${CMAKE_SOURCE_DIR}/include)
+include_directories(${CMAKE_SOURCE_DIR}/include/crow)
+include_directories(${CMAKE_SOURCE_DIR}/include/crow/include)
+include_directories(${CMAKE_SOURCE_DIR}/include/crow/include/crow)
+include_directories(${CMAKE_SOURCE_DIR}/include/crow/include/crow/middlewares)
+
 # Add the server executable
 add_executable(server ${SRC_DIR}/server.cpp)
 
 # Link dependencies correctly
 target_include_directories(server PRIVATE ${CMAKE_SOURCE_DIR}/include)
-target_link_libraries(server PRIVATE nlohmann_json)
-target_link_libraries(server PRIVATE crow)  
 
 # INSTALL ######################################################################
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
