@@ -61,7 +61,7 @@ add_executable(server ${SRC_DIR}/server.cpp)
 # Link dependencies correctly
 target_include_directories(server PRIVATE ${CMAKE_SOURCE_DIR}/include)
 target_link_libraries(server PRIVATE nlohmann_json)
-target_link_libraries(server PRIVATE ${CMAKE_BINARY_DIR}/_deps/crow-build/libcrow.a)
+target_link_libraries(server PRIVATE crow)  
 
 # INSTALL ######################################################################
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
