@@ -42,9 +42,9 @@ FetchContent_Declare(json
 set(FETCHCONTENT_UPDATES_DISCONNECTED TRUE)
 FetchContent_MakeAvailable(crow json)
 
-# Directories
-include_directories(${json_SOURCE_DIR}/include)
-include_directories(${crow_SOURCE_DIR}/include)
+# Correct paths for dependencies
+include_directories(${CMAKE_BINARY_DIR}/_deps/json-src/include)
+include_directories(${CMAKE_BINARY_DIR}/_deps/crow-src/include)
 
 # BUILD SETTINGS ###############################################################
 if (APPLE)
@@ -58,9 +58,10 @@ endif()
 # Add the server executable
 add_executable(server ${SRC_DIR}/server.cpp)
 
-# Link dependencies
+# Link dependencies correctly
 target_include_directories(server PRIVATE ${CMAKE_SOURCE_DIR}/include)
-target_link_libraries(server PRIVATE crow json)
+target_link_libraries(server PRIVATE nlohmann_json)
+target_link_libraries(server PRIVATE ${CMAKE_BINARY_DIR}/_deps/crow-build/libcrow.a)
 
 # INSTALL ######################################################################
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
