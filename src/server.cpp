@@ -187,6 +187,32 @@ int main() {
                     
                     <button type="submit">Soumettre</button>
                 </form>
+                <script>
+                    document.querySelector("form").addEventListener("submit", function(event) {
+                        event.preventDefault(); // Prevent normal form submission
+
+                        let formData = new FormData(this);
+                        let jsonObject = {};
+    
+                        formData.forEach((value, key) => {
+                            jsonObject[key] = value;
+                        });
+
+                        fetch("/submit", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify(jsonObject)
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log("Server Response:", data);
+                            alert("Form submitted successfully!");
+                        })
+                        .catch(error => console.error("Error:", error));
+                    });
+                </script>
             </body>
             </html>
         )";
@@ -195,12 +221,28 @@ int main() {
     // Route to handle form submission (POST request)
     CROW_ROUTE(app, "/submit").methods("POST"_method)
     ([](const crow::request& req) {
-        auto json_data = nlohmann::json::parse(req.body, nullptr, false);
-        if (json_data.is_discarded()) {
-            return crow::response(400, "Invalid JSON");
+        try {
+            // Parse JSON from the request body
+            auto json_data = nlohmann::json::parse(req.body);
+        
+            // Store all fields in a map
+            std::map<std::string, std::string> answers;
+            for (auto& el : json_data.items()) {
+                answers[el.key()] = el.value();
+            }
+
+            // Log received responses
+            CROW_LOG_INFO << "Nouvelle réponse reçue:";
+            for (const auto& [key, value] : answers) {
+                CROW_LOG_INFO << key << ": " << value;
+            }
+
+            // Send back the received data as JSON response
+            return crow::response{json_data.dump(4)};
+        
+        } catch (const std::exception& e) {
+            return crow::response(400, std::string("Invalid JSON format: ") + e.what());
         }
-        CROW_LOG_INFO << "Nouvelle réponse: " << json_data.dump();
-        return crow::response{json_data.dump()};
     });
 
     app.bindaddr("0.0.0.0").port(5000).multithreaded().run();
