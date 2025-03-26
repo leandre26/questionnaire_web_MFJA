@@ -79,12 +79,6 @@ int main() {
                         box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
                         margin-top: 20px;
                     }
-                    .title-image {
-                        max-width: 80px;
-                        height: auto;
-                        display: block;
-                         margin: 0 auto 10px;
-                    }
                     h1 {
                         font-size: 30px;
                         color: rgba(71, 69, 69, 0.842);
@@ -98,7 +92,6 @@ int main() {
             </head>
             <body>
                 <div class="title-container">
-                    <img src="Logo-MFJA.jpg" alt="Logo" class="title-image">
                     <h1>Etat du centre d'usinage</h1>
                     <h2>Remplissez ce questionnaire</h2>
                     <h2>avant d'utiliser la machine</h2>
