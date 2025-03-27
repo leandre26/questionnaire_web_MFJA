@@ -52,7 +52,9 @@ include_directories(${CMAKE_SOURCE_DIR}/include/crow)
 include_directories(${CMAKE_SOURCE_DIR}/include/crow/include)
 include_directories(${CMAKE_SOURCE_DIR}/include/crow/include/crow)
 include_directories(${CMAKE_SOURCE_DIR}/include/crow/include/crow/middlewares)
-include_directories(/usr/include)
+
+find_path(ZMQ_INCLUDE_DIR zmq.hpp PATHS /usr/include /usr/local/include)
+include_directories(${ZMQ_INCLUDE_DIR})
 
 find_package(Threads REQUIRED)
 find_library(ZMQ_LIB zmq)
