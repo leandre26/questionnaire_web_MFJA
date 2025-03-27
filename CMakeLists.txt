@@ -49,6 +49,7 @@ include_directories(${json_SOURCE_DIR}/include)
 
 include_directories(${CMAKE_SOURCE_DIR}/include)
 include_directories(${CMAKE_SOURCE_DIR}/include/zmq)
+include_directories(${CMAKE_SOURCE_DIR}/include/zmq/external)
 include_directories(${CMAKE_SOURCE_DIR}/include/crow)
 include_directories(${CMAKE_SOURCE_DIR}/include/crow/include)
 include_directories(${CMAKE_SOURCE_DIR}/include/crow/include/crow)
@@ -63,10 +64,7 @@ add_executable(server ${SRC_DIR}/server.cpp)
 # Link dependencies correctly
 target_include_directories(server PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
-target_link_libraries(server PRIVATE 
-    Threads::Threads 
-    ${ZMQ_LIBR}
-)
+target_link_libraries(server PRIVATE zmq)
 
 # INSTALL ######################################################################
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
