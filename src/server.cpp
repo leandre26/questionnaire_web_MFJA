@@ -1,9 +1,16 @@
 #include <crow.h>
 #include <nlohmann/json.hpp>
+#include <zmq.hpp>
+#include <thread>
+#include <iostream>
+#include <map>
 
 int main() {
     crow::SimpleApp app;
-
+    zmq::context_t context(1);
+    zmq::socket_t publisher(context, ZMQ_PUB);
+    publisher.bind("tcp://*:5555"); // Port ZeroMQ
+    
     // Route to serve the questionnaire form
     CROW_ROUTE(app, "/questionnaire")
     ([]() {
@@ -220,7 +227,7 @@ int main() {
     
     // Route to handle form submission (POST request)
     CROW_ROUTE(app, "/submit").methods("POST"_method)
-    ([](const crow::request& req) {
+    ([&publisher](const crow::request& req) {
         try {
             // Parse JSON from the request body
             auto json_data = nlohmann::json::parse(req.body);
@@ -237,8 +244,16 @@ int main() {
                 CROW_LOG_INFO << key << ": " << value;
             }
 
-            // Send back the received data as JSON response
-            return crow::response{json_data.dump(4)};
+            // Convertir la map en JSON
+            nlohmann::json json_message = answers;
+            std::string message = json_message.dump();
+
+            // Envoi des données au broker via ZeroMQ
+            zmq::message_t zmqMessage(message.begin(), message.end());
+            publisher.send(zmqMessage, zmq::send_flags::none);
+            
+            std::cout << "Données envoyées : " << message << std::endl;
+            return crow::response{json_data.dump(4)}; // Send back the received data as JSON response
         
         } catch (const std::exception& e) {
             return crow::response(400, std::string("Invalid JSON format: ") + e.what());
