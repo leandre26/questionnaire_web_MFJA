@@ -61,10 +61,15 @@ find_library(ZMQ_LIB zmq)
 # Add the server executable
 add_executable(server ${SRC_DIR}/server.cpp)
 
+link_directories(${CMAKE_SOURCE_DIR}/lib)
+
 # Link dependencies correctly
 target_include_directories(server PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
-target_link_libraries(server PRIVATE zmq)
+target_link_libraries(server PRIVATE 
+    Threads::Threads
+    zmq
+)
 
 # INSTALL ######################################################################
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
