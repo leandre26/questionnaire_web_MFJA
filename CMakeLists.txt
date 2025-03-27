@@ -48,14 +48,11 @@ endif()
 include_directories(${json_SOURCE_DIR}/include)
 
 include_directories(${CMAKE_SOURCE_DIR}/include)
+include_directories(${CMAKE_SOURCE_DIR}/include/zmq)
 include_directories(${CMAKE_SOURCE_DIR}/include/crow)
 include_directories(${CMAKE_SOURCE_DIR}/include/crow/include)
 include_directories(${CMAKE_SOURCE_DIR}/include/crow/include/crow)
 include_directories(${CMAKE_SOURCE_DIR}/include/crow/include/crow/middlewares)
-
-include_directories(${ZMQ_INCLUDE_DIR})
-include_directories(${ZMQ_INCLUDE_DIR}/usr/include)
-include_directories(${ZMQ_INCLUDE_DIR}/usr/local/include)
 
 find_package(Threads REQUIRED)
 find_library(ZMQ_LIB zmq)
