@@ -53,11 +53,21 @@ include_directories(${CMAKE_SOURCE_DIR}/include/crow/include)
 include_directories(${CMAKE_SOURCE_DIR}/include/crow/include/crow)
 include_directories(${CMAKE_SOURCE_DIR}/include/crow/include/crow/middlewares)
 
+find_package(Threads REQUIRED)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(ZMQ REQUIRED libzmq)
+
 # Add the server executable
 add_executable(server ${SRC_DIR}/server.cpp)
 
 # Link dependencies correctly
 target_include_directories(server PRIVATE ${CMAKE_SOURCE_DIR}/include)
+target_include_directories(server PRIVATE ${ZeroMQ_INCLUDE_DIRS})
+target_link_libraries(server PRIVATE ${ZeroMQ_LIBRARIES})
+target_link_libraries(server PRIVATE 
+    Threads::Threads 
+    ${ZMQ_LIBRARIES}
+)
 
 # INSTALL ######################################################################
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
