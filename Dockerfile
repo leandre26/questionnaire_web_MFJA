@@ -10,7 +10,9 @@ RUN apt-get update && apt-get install -y \
     libboost-all-dev \
     libasio-dev \
     libssl-dev \
-    wget
+    wget \
+    libzmq3-dev \
+    && apt-get clean
 
 # Set the working directory inside the container
 WORKDIR /app
