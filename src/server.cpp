@@ -250,6 +250,7 @@ int main() {
 
             // Envoi des données au broker via ZeroMQ
             zmq::message_t zmqMessage(message.begin(), message.end());
+            std::cout << "📤 Envoi du message ZMQ: " << message << std::endl;
             publisher.send(zmqMessage, zmq::send_flags::none);
             
             std::cout << "Données envoyées : " << message << std::endl;
