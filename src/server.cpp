@@ -10,6 +10,7 @@ int main() {
     zmq::context_t context(1);
     zmq::socket_t publisher(context, ZMQ_PUB);
     publisher.bind("tcp://*:5555"); // Port ZeroMQ
+    std::cout << "✅ ZeroMQ Publisher lié au port 5555" << std::endl;
     
     // Route to serve the questionnaire form
     CROW_ROUTE(app, "/questionnaire")
